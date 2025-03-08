@@ -11,6 +11,10 @@ app.use(cors({}));
 app.use(express.json());
 app.use('/api', itemRoutes);
 
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, 'favicon.ico'));
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
