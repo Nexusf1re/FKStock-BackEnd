@@ -2,10 +2,10 @@ import sql from '../config/db.js';
 
 export const createItem = async (req, res) => {
     try {
-        const { Material, RC, Un, Valor, Marca } = req.body;
+        const { RC, Material, Quantidade, Valor, Valor_NF, Un, Marca, Recebimento } = req.body;
         const [item] = await sql`
-            INSERT INTO "FK Stock" ("Material", "RC", "Un", "Valor", "Marca", "Created_at")
-            VALUES (${Material}, ${RC}, ${Un}, ${Valor}, ${Marca}, NOW() AT TIME ZONE 'America/Sao_Paulo')
+            INSERT INTO "FK Stock" ("RC", "Material", "Quantidade", "Valor", "Valor_NF", "Un", "Marca", "Recebimento", "Created_at")
+            VALUES (${RC}, ${Material}, ${Quantidade}, ${Valor}, ${Valor_NF}, ${Un}, ${Marca}, to_char(${Recebimento}::date, 'DD-MM-YYYY'), NOW() AT TIME ZONE 'America/Sao_Paulo')
             RETURNING *`;
         res.status(201).json(item);
     } catch (error) {
@@ -15,7 +15,7 @@ export const createItem = async (req, res) => {
 
 export const getItems = async (req, res) => {
     try {
-        const items = await sql`SELECT * FROM "FK Stock"`;
+        const items = await sql`SELECT *, to_char("Recebimento"::date, 'DD-MM-YYYY') as "Recebimento" FROM "FK Stock"`;
         res.status(200).json(items);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -24,7 +24,7 @@ export const getItems = async (req, res) => {
 
 export const getItemById = async (req, res) => {
     try {
-        const [item] = await sql`SELECT * FROM "FK Stock" WHERE "Id" = ${req.params.id}`;
+        const [item] = await sql`SELECT *, to_char("Recebimento"::date, 'DD-MM-YYYY') as "Recebimento" FROM "FK Stock" WHERE "Id" = ${req.params.id}`;
         if (!item) {
             throw new Error('Item not found');
         }
@@ -36,10 +36,10 @@ export const getItemById = async (req, res) => {
 
 export const updateItem = async (req, res) => {
     try {
-        const { Material, RC, Un, Valor, Marca } = req.body;
+        const { RC, Material, Quantidade, Valor, Valor_NF, Un, Marca, Recebimento } = req.body;
         const [item] = await sql`
             UPDATE "FK Stock"
-            SET "Material" = ${Material}, "RC" = ${RC}, "Un" = ${Un}, "Valor" = ${Valor}, "Marca" = ${Marca}, "Updated_at" = NOW() AT TIME ZONE 'America/Sao_Paulo'
+            SET "RC" = ${RC}, "Material" = ${Material}, "Quantidade" = ${Quantidade}, "Valor" = ${Valor}, "Valor_NF" = ${Valor_NF}, "Un" = ${Un}, "Marca" = ${Marca}, "Recebimento" = to_char(${Recebimento}::date, 'DD-MM-YYYY'), "Updated_at" = NOW() AT TIME ZONE 'America/Sao_Paulo'
             WHERE "Id" = ${req.params.id}
             RETURNING *`;
         res.status(200).json(item);
