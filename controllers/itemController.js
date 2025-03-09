@@ -15,6 +15,7 @@ export const createItem = async (req, res) => {
 
 export const getItems = async (req, res) => {
     try {
+        console.log('Request received:', req.method, req.url); // Log request method and URL
         const items = await sql`SELECT *, to_char("Recebimento"::date, 'DD-MM-YYYY') as "Recebimento" FROM "FK Stock"`;
         res.status(200).json(items);
     } catch (error) {
