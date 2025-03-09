@@ -2,6 +2,8 @@ import itemRoutes from './routes/itemRoutes.js';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+
 
 const PORT = process.env.PORT || 3000;
 const app = express();
