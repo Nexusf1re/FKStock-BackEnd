@@ -1,14 +1,16 @@
 import sql from '../config/db.js';
 
 export const createItem = async (req, res) => {
+    console.log('Request body:', req.body);
     try {
         const { RC, Material, Quantidade, Valor, Valor_NF, Un, Marca, Recebimento } = req.body;
         const [item] = await sql`
             INSERT INTO "FK Stock" ("RC", "Material", "Quantidade", "Valor", "Valor_NF", "Un", "Marca", "Recebimento", "Created_at")
-            VALUES (${RC}, ${Material}, ${Quantidade}, ${Valor}, ${Valor_NF}, ${Un}, ${Marca}, to_char(${Recebimento}::date, 'DD-MM-YYYY'), NOW() AT TIME ZONE 'America/Sao_Paulo')
+            VALUES (${RC}, ${Material}, ${Quantidade}, ${Valor}, ${Valor_NF}, ${Un}, ${Marca}, ${Recebimento}::date, NOW() AT TIME ZONE 'America/Sao_Paulo')
             RETURNING *`;
         res.status(201).json(item);
     } catch (error) {
+        console.error('Error creating item:', error);
         res.status(400).json({ error: error.message });
     }
 };
