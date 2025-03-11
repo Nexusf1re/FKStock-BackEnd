@@ -44,8 +44,12 @@ export const updateItem = async (req, res) => {
             SET "RC" = ${RC}, "Material" = ${Material}, "Quantidade" = ${Quantidade}, "Valor" = ${Valor}, "Valor_NF" = ${Valor_NF}, "Un" = ${Un}, "Marca" = ${Marca}, "Recebimento" = to_char(${Recebimento}::date, 'DD-MM-YYYY'), "Updated_at" = NOW() AT TIME ZONE 'America/Sao_Paulo'
             WHERE "Id" = ${req.params.id}
             RETURNING *`;
+        if (!item) {
+            throw new Error('Update failed');
+        }
         res.status(200).json(item);
     } catch (error) {
+        console.error('Error updating item:', error);
         res.status(400).json({ error: error.message });
     }
 };
