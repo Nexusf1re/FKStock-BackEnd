@@ -17,7 +17,7 @@ export const createItem = async (req, res) => {
 
 export const getItems = async (req, res) => {
     try {
-        const items = await sql`SELECT *, to_char("Recebimento"::date, 'YYYY-MM-DD') as "Recebimento", to_char("Created_at", 'YYYY-MM-DD HH24:MI:SS') as "Created_at", to_char("Updated_at", 'YYYY-MM-DD HH24:MI:SS') as "Updated_at" FROM "FK Stock"`; // Formato atualizado
+        const items = await sql`SELECT *, to_char("Recebimento"::date, 'DD-MM-YYYY') as "Recebimento", to_char("Created_at", 'DD-MM-YYYY HH24:MI:SS') as "Created_at", to_char("Updated_at", 'DD-MM-YYYY HH24:MI:SS') as "Updated_at" FROM "FK Stock"`; // Formato atualizado
         res.status(200).json(items);
     } catch (error) {
         res.status(400).json({ error: error.message });
